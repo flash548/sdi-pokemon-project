@@ -1,26 +1,81 @@
 import React from 'react';
-import logo from './logo.svg';
+import Search from './Search'
+import PokemonFetch from './PokemonFetcher'
+import Collection from './Collection'
+import GroceryList from './GroceryList'
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state = { 
+      'offset': 0, 
+      'increment': 40, 
+      'isDetail' : false, 
+      'currentChar': '',
+      'collection': []
+    }
+
+    this.decrOffset = this.decrOffset.bind(this);
+    this.incrOffset = this.incrOffset.bind(this);
+    this.showAll = this.showAll.bind(this);
+    this.setCurrentChar = this.setCurrentChar.bind(this);
+    this.searchChar = this.searchChar.bind(this);
+  }
+
+  decrOffset (event) {
+    let newOffset = this.state.offset - this.state.increment;
+    if (newOffset < 0) { newOffset = 0; }
+    this.setState({'offset': newOffset})
+    event.preventDefault()
+}
+
+  incrOffset (event) {
+      let newOffset = this.state.offset + this.state.increment;
+      if (newOffset > 963 ) { newOffset = 963; }  //magic number - 963 total pokemon
+      this.setState({'offset': newOffset })
+      event.preventDefault()
+  }
+
+  showAll (event) {
+    this.setState({'isDetail' : false, 'isSearch': false})
+    event.preventDefault()
+  }
+
+  setCurrentChar(event) {
+    this.setState({'isDetail' : true, 'isSearch': false, 'currentChar': event.target.id} )
+  }
+
+  searchChar(event) {
+    this.setState({'isSearch': true, 'isDetail': false, 'currentChar': document.getElementById('searchBox').value })
+    event.preventDefault()
+  }
+
+  addToCollection = (obj) => {    
+    this.setState({'isDetail' : false, 'isSearch': false, 'collection': [...this.state.collection, obj]})
+  }
+
+  render() {
+    let command = 'showall'
+    if (this.state.isDetail) command = 'detail'
+    else if (this.state.isSearch) command = 'search'
+
+    return (
+      <div className="App">
+        <header className="App-header">
+          <h1>Pokemon</h1>
+        </header>
+        <Search data={this}/><br/>
+        <div class={'main'}>
+          <PokemonFetch parent={this} cmd={command} isDetail={this.state.isDetail} id={this.state.currentChar} offset={this.state.offset} increment={this.state.increment}/>
+          <Collection parent={this} data={this.state.collection}/>
+          <GroceryList parent={this} data={this.state.collection}/>
+        </div>
+      </div>
+    );
+
+  }
 }
 
 export default App;
