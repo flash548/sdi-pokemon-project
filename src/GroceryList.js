@@ -15,12 +15,11 @@ class GroceryList extends React.Component  {
                 items.add(i.item.name);
             })
         })
-        console.log([...items.values()])
         return (
             <div class={'grocery-div'}>
                 <h1>Grocery List</h1>
                     <div> <ul>
-                        {[...items.values()].forEach(item => {
+                        {[...items.values()].map(item => {
                             return <li>{item}</li>
                         })}
                         </ul>

@@ -10,7 +10,6 @@ class Collection extends React.Component  {
     }
 
     render() {
-        console.log(this.props.data)
         return (
             <div class={'collection-div'}>
                 <h1>My Collection</h1>

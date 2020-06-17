@@ -17,15 +17,15 @@ class DetailedChar extends React.Component {
     }
 
     async queryType(type) {
-        console.log(type)
+
         const response = await fetch('https://pokeapi.co/api/v2/type/' + type)
         const json = await response.json() 
         let others = []
         json.pokemon.forEach((pokemon) => {
-            console.log(pokemon.pokemon)
+
             others.push(pokemon.pokemon.url);
         })
-        console.log(others)
+
         let characters = []
         others.forEach(async (url) => {
             let response = await fetch(url)
