@@ -11,10 +11,11 @@ class App extends React.Component {
     super(props)
     this.state = { 
       'offset': 0, 
-      'increment': 40, 
+      'increment': 10, 
       'isDetail' : false, 
       'currentChar': '',
-      'collection': []
+      'collection': [],
+      'showCollection': false,
     }
 
     this.decrOffset = this.decrOffset.bind(this);
@@ -52,28 +53,67 @@ class App extends React.Component {
     event.preventDefault()
   }
 
-  addToCollection = (obj) => {    
-    this.setState({'isDetail' : false, 'isSearch': false, 'collection': [...this.state.collection, obj]})
+  addToCollection = (obj) => {   
+    this.setState({'collection': [...this.state.collection, obj]})
+  }
+
+  toggleCollection = (event) => {
+    this.setState({'showCollection': !this.state.showCollection})
+  }
+
+  charIsInCollection = (id) => {
+    for (let item of this.state.collection)  {
+      if (item.id === id) { return true; }
+      return false;
+    }
+    
+  }
+
+  removeFromCollection = (obj) => {   
+    var chars = []
+    for (let collChar of this.state.collection) {
+      if (collChar.id === obj.id) continue;
+      else chars.push(collChar)
+    }
+    this.setState({collection: chars})
   }
 
   render() {
+    console.log("APP REFRESH")
     let command = 'showall'
     if (this.state.isDetail) command = 'detail'
     else if (this.state.isSearch) command = 'search'
 
-    return (
-      <div className="App">
-        <header className="App-header">
-          <h1>Pokemon</h1>
-        </header>
-        <Search data={this}/><br/>
-        <div class={'main'}>
-          <PokemonFetch parent={this} cmd={command} isDetail={this.state.isDetail} id={this.state.currentChar} offset={this.state.offset} increment={this.state.increment}/>
-          <Collection parent={this} data={this.state.collection}/>
-          <GroceryList parent={this} data={this.state.collection}/>
+    if (this.state.showCollection) {
+      return (
+        <div className="App">
+          <header className="App-header">
+            <h1>Pokemon</h1>
+          </header>
+          <Search data={this}/><br/>
+          <div class={'main'}>
+            <PokemonFetch parent={this} cmd={command} isDetail={this.state.isDetail} id={this.state.currentChar} offset={this.state.offset} increment={this.state.increment}/>
+            <Collection parent={this} data={this.state.collection}/>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+    else {
+      // don't show collection
+      return (
+        <div className="App">
+          <header className="App-header">
+            <h1>Pokemon</h1>
+          </header>
+          <Search data={this}/><br/>
+          <div class={'main'}>
+            <PokemonFetch parent={this} cmd={command} isDetail={this.state.isDetail} id={this.state.currentChar} offset={this.state.offset} increment={this.state.increment}/>
+          </div>
+        </div>
+      );
+
+
+    }
 
   }
 }

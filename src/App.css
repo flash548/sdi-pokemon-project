@@ -69,6 +69,13 @@
   margin: 5px;
 }
 
+.page-tool {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
