@@ -75,7 +75,7 @@ class PokemonFetch extends React.Component {
             if (this.state.names.includes(this.props.id)) {
                 this.queryName(this.props.id)
                 return (
-                    <DetailedChar data={this.state.currentChar}/>
+                    <DetailedChar parent={this.parent} data={this.state.currentChar}/>
                 )  
             }
             else {
